@@ -69,6 +69,7 @@ class SpeedSensorApp:
 
     def connect(self):
         self.com_num = int(self.com_text.get())
+        self.save_params()
         if hasattr(self, 'reader'):
             self.reader.close_serial()
         self.reader = SerialRead(self.com_num, self)
