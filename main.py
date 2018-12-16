@@ -83,7 +83,14 @@ class SpeedSensorApp:
         self.canvas.create_oval(2, 3, 18, 19, fill=color)
 
     def setSpeed(self, value):
-        self.speed_label['text'] = 'Speed: ' + str(value)
+        between_sensors = 63 / 1000
+        time = value / 1000
+        speed = between_sensors / time
+        try:
+            speed1 = str(speed)[:str(speed).find('.')+3]
+        except:
+            speed1 = str(speed)
+        self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
 
     def setCOMport(self, value):
         self.com_label['text'] = 'COM' + str(value)
