@@ -19,6 +19,9 @@ class SpeedSensorApp:
         self.master = master
         self.frame = Frame(self.master)
 
+        self.master.title("Speed Sensor")
+        self.master.iconbitmap("icon.ico")
+
         self.frame.title = 'SpeedSensor'
         self.master.geometry('400x130+500+600')
         self.master.resizable(False, False)
