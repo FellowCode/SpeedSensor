@@ -8,7 +8,7 @@ app_name = 'SpeedSensor'
 a = Analysis(['src\\main.py'],
      pathex=['C:\\Users\\Admin\\Desktop\\SpeedSensorCompile'],
      binaries=None,
-     datas=None,
+     datas=[('src\\icon.ico', '.'),],
      hiddenimports=[],
      hookspath=None,
      runtime_hooks=None,
@@ -24,7 +24,8 @@ exe = EXE(pyz,
   debug=False,
   strip=False,
   upx=True,
-  console=False)
+  console=False,
+  icon='src\\icon.ico')
 
 coll = COLLECT(exe,
   a.zipfiles,
