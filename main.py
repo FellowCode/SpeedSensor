@@ -15,6 +15,12 @@ if not os.path.exists(appdata_path):
 class SpeedSensorApp:
     com_num = 5
 
+    sens_dist = 500
+
+    speed_list = []
+
+    cur_speed_index = -1
+
     def __init__(self, master):
         self.master = master
         self.frame = Frame(self.master)
@@ -36,6 +42,7 @@ class SpeedSensorApp:
         try:
             f = open(appdata_path + 'settings.txt', 'w')
             f.write(str(self.com_num))
+            f.write(self.sensor_dist.get())
             f.close()
         except:
             print('save params error')
@@ -44,6 +51,7 @@ class SpeedSensorApp:
         try:
             f = open(appdata_path + 'settings.txt')
             self.com_num = int(f.readline())
+            self.sensor_dist.set(f.readline().strip())
             f.close()
         except:
             print('load params error')
@@ -57,6 +65,14 @@ class SpeedSensorApp:
         self.com_entry.place(x=50, y=7, width=30)
         self.com_text.set(str(self.com_num))
 
+        self.com_label = Label(text='Dist', font=("Courier", 11))
+        self.com_label.place(x=10, y=34)
+
+        self.sensor_dist = StringVar()
+        self.sens_dist_entry = Entry(textvariable=self.sensor_dist, font=("Courier", 11))
+        self.sens_dist_entry.place(x=50, y=35, width=40)
+        self.sensor_dist.set(str(self.sens_dist))
+
         self.conn_button = Button(text='Connect', font=("Calibri", 9), width=10)
         self.conn_button.bind('<ButtonRelease-1>', lambda event: self.connect())
         self.conn_button.place(x=90, y=2)
@@ -67,8 +83,16 @@ class SpeedSensorApp:
         self.canvas = Canvas(self.conn_label, width=50, height=20)
         self.canvas.place(x=148, y=0)
 
+        self.conn_button = Button(text='<', font=("Calibri", 12), width=2)
+        self.conn_button.bind('<ButtonRelease-1>', lambda event: self.prev_speed())
+        self.conn_button.place(x=10, y=65)
+
         self.speed_label = Label(text='Speed: None', font=("Courier", 26))
-        self.speed_label.place(relx=0.05, y=60, relwidth=0.9)
+        self.speed_label.place(relx=0.1, y=60, relwidth=0.8)
+
+        self.conn_button = Button(text='>', font=("Calibri", 12), width=2)
+        self.conn_button.bind('<ButtonRelease-1>', lambda event: self.next_speed())
+        self.conn_button.place(x=365, y=65)
 
     def connect(self):
         self.com_num = int(self.com_text.get())
@@ -85,10 +109,37 @@ class SpeedSensorApp:
             color = 'red'
         self.canvas.create_oval(2, 3, 18, 19, fill=color)
 
+    def prev_speed(self):
+        if len(self.speed_list) == 0:
+            return
+        if self.cur_speed_index > 0:
+            self.cur_speed_index -= 1
+        speed = str(self.speed_list[self.cur_speed_index])
+        try:
+            speed1 = str(speed)[:str(speed).find('.') + 3]
+        except:
+            speed1 = str(speed)
+        self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
+
+    def next_speed(self):
+        if len(self.speed_list) == 0:
+            return
+        if self.cur_speed_index < len(self.speed_list)-1:
+            self.cur_speed_index += 1
+        speed = str(self.speed_list[self.cur_speed_index])
+        try:
+            speed1 = str(speed)[:str(speed).find('.') + 3]
+        except:
+            speed1 = str(speed)
+        self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
+
     def setSpeed(self, value):
-        between_sensors = 63 / 1000
+        between_sensors = int(self.sensor_dist.get()) / 1000
         time = value / 1000
         speed = between_sensors / time
+        self.speed_list.append(speed)
+
+        self.cur_speed_index = len(self.speed_list)-1
         try:
             speed1 = str(speed)[:str(speed).find('.')+3]
         except:

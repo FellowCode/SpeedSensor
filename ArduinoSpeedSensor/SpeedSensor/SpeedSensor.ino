@@ -4,8 +4,8 @@ bool sens1_IsResponse = false, sens2_IsResponse=false;
 
 void setup() {
   Serial.begin(115200);
-  pinMode(14, INPUT);
-  pinMode(12, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
 
 }
 
@@ -15,9 +15,14 @@ void loop() {
     serialTimer = millis();
   }
   int s1 = 0, s2 = 0;
-  s1 = digitalRead(14);
-  s2 = digitalRead(12);
-  if(s1 == 0){
+  s1 = analogRead(A3);
+  s2 = analogRead(A4);
+  /*Serial.print(s1);
+  Serial.print(" ");
+  Serial.println(s2);*/
+  if(s1 < 1000){
+    /*Serial.print("s1 ");
+    Serial.println(s1);*/
     if(sens2_IsResponse){
       sens2_IsResponse = false;
       if(millis() - responseTime > 10){
@@ -29,7 +34,9 @@ void loop() {
       sens1_IsResponse = true;
     }
   }
-   if(s2 == 0){
+   if(s2 < 1000){
+    /*Serial.print("s2 ");
+    Serial.println(s2);*/
     if(sens1_IsResponse){
       sens1_IsResponse = false;
       if(millis() - responseTime > 10){
