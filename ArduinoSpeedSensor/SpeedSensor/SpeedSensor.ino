@@ -20,7 +20,7 @@ void loop() {
   /*Serial.print(s1);
   Serial.print(" ");
   Serial.println(s2);*/
-  if(s1 < 1000){
+  if(s1 < 950){
     /*Serial.print("s1 ");
     Serial.println(s1);*/
     if(sens2_IsResponse){
@@ -34,7 +34,7 @@ void loop() {
       sens1_IsResponse = true;
     }
   }
-   if(s2 < 1000){
+   if(s2 < 950){
     /*Serial.print("s2 ");
     Serial.println(s2);*/
     if(sens1_IsResponse){

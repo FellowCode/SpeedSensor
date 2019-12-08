@@ -41,7 +41,7 @@ class SpeedSensorApp:
     def save_params(self):
         try:
             f = open(appdata_path + 'settings.txt', 'w')
-            f.write(str(self.com_num))
+            f.write(str(self.com_num) + '\n')
             f.write(self.sensor_dist.get())
             f.close()
         except:
@@ -51,7 +51,7 @@ class SpeedSensorApp:
         try:
             f = open(appdata_path + 'settings.txt')
             self.com_num = int(f.readline())
-            self.sensor_dist.set(f.readline().strip())
+            self.sens_dist = int(f.readline())
             f.close()
         except:
             print('load params error')
@@ -71,7 +71,7 @@ class SpeedSensorApp:
         self.sensor_dist = StringVar()
         self.sens_dist_entry = Entry(textvariable=self.sensor_dist, font=("Courier", 11))
         self.sens_dist_entry.place(x=50, y=35, width=40)
-        self.sensor_dist.set(str(self.sens_dist))
+        self.sensor_dist.set(self.sens_dist)
 
         self.conn_button = Button(text='Connect', font=("Calibri", 9), width=10)
         self.conn_button.bind('<ButtonRelease-1>', lambda event: self.connect())
@@ -93,6 +93,9 @@ class SpeedSensorApp:
         self.conn_button = Button(text='>', font=("Calibri", 12), width=2)
         self.conn_button.bind('<ButtonRelease-1>', lambda event: self.next_speed())
         self.conn_button.place(x=365, y=65)
+
+        self.page_label = Label(text='', font=("Courier", 11))
+        self.page_label.place(x=170, y=100)
 
     def connect(self):
         self.com_num = int(self.com_text.get())
@@ -120,6 +123,7 @@ class SpeedSensorApp:
         except:
             speed1 = str(speed)
         self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
+        self.page_label['text'] = 'Page ' + str(self.cur_speed_index - len(self.speed_list) + 1)
 
     def next_speed(self):
         if len(self.speed_list) == 0:
@@ -132,6 +136,9 @@ class SpeedSensorApp:
         except:
             speed1 = str(speed)
         self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
+        self.page_label['text'] = 'Page ' + str(self.cur_speed_index - len(self.speed_list) + 1)
+        if self.cur_speed_index - len(self.speed_list) == -1:
+            self.page_label['text'] = ''
 
     def setSpeed(self, value):
         between_sensors = int(self.sensor_dist.get()) / 1000
@@ -145,6 +152,7 @@ class SpeedSensorApp:
         except:
             speed1 = str(speed)
         self.speed_label['text'] = 'Speed: ' + speed1 + 'm/s'
+        self.page_label['text'] = ''
 
     def setCOMport(self, value):
         self.com_label['text'] = 'COM' + str(value)
